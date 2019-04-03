@@ -19,14 +19,29 @@
         "enum": ["required", "optional", "disallowed"]
     },
     "branch": {
-      "readme": {
-        "$id": "#definitions/branch",
-        "properties": {
-          "name": {"type": "string"},
-          "enabled": {"type": "boolean"},
-          "disposition": {"$ref": "#/definitions/disposition"},
-          "protected": {"type": "boolean"}
-        }
+      "$id": "#definitions/branch",
+      "properties": {
+        "name": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "disposition": {"$ref": "#/definitions/disposition"},
+        "protected": {"type": "boolean"},
+        "default": {"types": "boolean"}
+      }
+    },
+    "integrations": {
+      "$id": "#definitions/integration",
+      "properties": {
+        "name": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "disposition": {"$ref": "#/definitions/disposition"}
+      }
+    },
+    "badge": {
+      "$id": "#definitions/badge",
+      "properties": {
+        "name": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "disposition": {"$ref": "#/definitions/disposition"}
       }
     },
     "repository": {
@@ -37,9 +52,23 @@
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
         "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
+        "integrations": {"type": "array", "items": {"$ref": "#/definitions/integration"}},
+        "badges": {"type": "array", "items": {"$ref": "#/definitions/badge"}},
         "public": {"type": "boolean"},
-        "homepage": {"type": "string"},
-        "default_branch": {"type": "string"}
+        "homepage": {"type": "string"}
+      }
+    },
+    "language": {
+      "$id": "#definitions/language",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
+        "automations": {"type": "array", "items": {"$ref": "#/definitions/automations"}},
+        "public": {"type": "boolean"},
+        "homepage": {"type": "string"}
       }
     }
   },
