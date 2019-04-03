@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/githublint.schema.json#",
+  "aws": {
+    "enabled": true
+  },
+  "respositories": [
+    {
+      "name": "default",
+      "enabled": true,
+      "validations": [
+        {
+
+        }
+      ]
+    }
+  ]
+}

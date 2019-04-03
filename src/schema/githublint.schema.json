@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "githublint.schema.json",
+  "additionalItems": false,
+  "additionalProperties": false,
+  "definitions": {
+    "source": {
+      "$id": "#definitions/source",
+      "additionalProperties": false,
+      "title": "Source",
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "filter": {"type": "string"}
+      }
+    },
+    "disposition": {
+        "type": "string",
+        "enum": ["required", "optional", "disallowed"]
+    },
+    "value": {
+      "$id": "#definitions/value",
+      "additionalProperties": false,
+      "title": "Record",
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "disposition": {"$ref": "#/definitions/disposition"},
+        "filter": {"type": ["string", "object"]}
+      }
+    },
+    "validations": {
+      "$id": "#definitions/validations",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "readme": {"type": "array", "items": {"$ref": "#/definitions/validation/readme"}}
+      }
+    },
+    "validation": {
+      "readme": {
+        "$id": "#definitions/validation/readme",
+        "properties": {
+          "enabled": {"type": "boolean"}
+        }
+      }
+    },
+    "repository": {
+      "$id": "#definitions/repository",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "validations": {"$ref": "#/definitions/validations"},
+        "type": {"type": "string"}
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "$schema": {"type": "string"},
+    "additionalProperties": false,
+    "github": {"$ref": "#/definitions/source"},
+    "repositories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/repository"
+      }
+    }
+  }
+}
