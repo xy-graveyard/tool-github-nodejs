@@ -11,12 +11,11 @@ export class MasterConfig extends Config {
     if (typeof source === "string") {
       srcObj = JSON.parse(source)
     }
-    const master = _.merge(new MasterConfig("master"), srcObj)
+    const master: MasterConfig = _.merge(new MasterConfig("master"), srcObj)
     master.repositories = new Configs<RepositoryConfig>()
     if (srcObj.repositories) {
       for (const repository of srcObj.repositories) {
-        const serverType = master.getServerType(repository.name)
-        const newRepoObj = RepositoryConfig.parse(repository, serverType)
+        const newRepoObj = RepositoryConfig.parse(repository)
         master.repositories.set(newRepoObj.name, newRepoObj)
       }
     }
