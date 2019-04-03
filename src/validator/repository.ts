@@ -2,8 +2,6 @@
 import { Validator } from './validator'
 import chalk from 'chalk'
 import _ from 'lodash'
-import Crawler from 'crawler'
-import url from 'url'
 import { RepositoryConfig } from '../config/repository'
 
 export class RepositoryValidator extends Validator<RepositoryConfig> {

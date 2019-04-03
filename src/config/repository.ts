@@ -4,14 +4,13 @@ import { Config } from './config'
 
 export class RepositoryConfig extends Config {
 
-  public static parse(source: any, type?: string) {
+  public static parse(source: any) {
     let srcObj = source
     if (typeof source === "string") {
       srcObj = JSON.parse(source)
     }
 
     assert(typeof srcObj.name === "string")
-    assert(type)
 
     let repository = new RepositoryConfig(srcObj.name)
     repository = _.merge(repository, srcObj)
