@@ -1,6 +1,6 @@
 {
   "name": "githublint",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "XYO Internal Github Tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,17 +30,20 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
+    "@octokit/rest": "^16.23.2",
     "assert": "^1.4.1",
     "aws-sdk": "^2.431.0",
     "axios": "^0.18.0",
     "chalk": "^2.4.2",
     "commander": "^2.19.0",
     "dotenv-expand": "^5.1.0",
+    "fs-extra": "^7.0.1",
     "load-json-file": "^5.2.0",
     "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
+    "@types/fs-extra": "^5.0.5",
     "@types/lodash": "^4.14.123",
     "@types/node": "^11.12.1",
     "@types/stream-buffers": "^3.0.2",
