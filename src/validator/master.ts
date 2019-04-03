@@ -3,6 +3,9 @@ import { Validator } from './validator'
 import { RepositoryValidator } from './repository'
 import { AWS } from '../aws'
 import chalk from 'chalk'
+import Octokit from '@octokit/rest'
+import fs from 'fs-extra'
+import { RepositoryConfig } from '../config/repository'
 
 export class MasterValidator extends Validator<MasterConfig> {
 
@@ -15,7 +18,7 @@ export class MasterValidator extends Validator<MasterConfig> {
   public async validate() {
     this.addRepositoriesFromConfig()
     if (this.config.aws && this.config.aws.enabled) {
-      await this.addRepositoriesFromGiuthub()
+      await this.addRepositoriesFromGithub()
     }
 
     let completedRepositories = 0
@@ -49,7 +52,35 @@ export class MasterValidator extends Validator<MasterConfig> {
     }
   }
 
-  private addRepositoriesFromGiuthub() {
-    return
+  private async addRepositoriesFromGithub() {
+    try {
+      const auth = (await fs.readFile('accesstoken.txt')).toString()
+      const octokit = new Octokit({ auth })
+
+      let page = 1
+      while (page > 0) {
+        const repos = await octokit.repos.list(
+          {
+            type: 'all',
+            sort: 'full_name',
+            direction: 'asc',
+            per_page: 100,
+            page
+          }
+        )
+
+        page++
+        if (repos.data.length < 100) {
+          page = 0
+        }
+
+        for (const repo of repos.data) {
+          console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
+          this.repositories.push(new RepositoryValidator(new RepositoryConfig(repo.full_name), repo))
+        }
+      }
+    } catch (ex) {
+      console.error(chalk.red(ex.message))
+    }
   }
 }

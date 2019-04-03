@@ -18,6 +18,7 @@ export class RepositoryConfig extends Config {
   }
 
   public name: string
+  public git: any
 
   constructor(name: string) {
     super(name)

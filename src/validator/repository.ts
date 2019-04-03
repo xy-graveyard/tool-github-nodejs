@@ -6,10 +6,12 @@ import { RepositoryConfig } from '../config/repository'
 
 export class RepositoryValidator extends Validator<RepositoryConfig> {
   public name: string
+  public git: any
 
-  constructor (config: RepositoryConfig) {
+  constructor (config: RepositoryConfig, git?: any) {
     super(config)
     this.name = config.name
+    this.git = git
   }
 
   public async validate() {

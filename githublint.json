@@ -1,8 +1,5 @@
 {
   "$schema": "./src/schema/githublint.schema.json#",
-  "aws": {
-    "enabled": true
-  },
   "repositories": [
     {
       "name": "default"

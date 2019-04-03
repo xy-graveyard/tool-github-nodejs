@@ -18,29 +18,14 @@
         "type": "string",
         "enum": ["required", "optional", "disallowed"]
     },
-    "value": {
-      "$id": "#definitions/value",
-      "additionalProperties": false,
-      "title": "Record",
-      "type": "object",
-      "properties": {
-        "name": {"type": "string"},
-        "disposition": {"$ref": "#/definitions/disposition"},
-        "filter": {"type": ["string", "object"]}
-      }
-    },
-    "validations": {
-      "$id": "#definitions/validations",
-      "properties": {
-        "enabled": {"type": "boolean"},
-        "readme": {"type": "array", "items": {"$ref": "#/definitions/validation/readme"}}
-      }
-    },
-    "validation": {
+    "branch": {
       "readme": {
-        "$id": "#definitions/validation/readme",
+        "$id": "#definitions/branch",
         "properties": {
-          "enabled": {"type": "boolean"}
+          "name": {"type": "string"},
+          "enabled": {"type": "boolean"},
+          "disposition": {"$ref": "#/definitions/disposition"},
+          "protected": {"type": "boolean"}
         }
       }
     },
@@ -51,8 +36,10 @@
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
-        "validations": {"$ref": "#/definitions/validations"},
-        "type": {"type": "string"}
+        "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
+        "public": {"type": "boolean"},
+        "homepage": {"type": "string"},
+        "default_branch": {"type": "string"}
       }
     }
   },
