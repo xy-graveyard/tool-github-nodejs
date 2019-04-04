@@ -1,17 +1,18 @@
 language: node_js
 node_js:
-  - 10
+- 10
 cache:
   yarn: true
   directories:
-    - node_modules
+  - node_modules
 addons:
   sonarcloud:
-    organization: "xyoraclenetwork"
-    token:
-      ssecure: "Q2HCoSeg2zNk+hksSkFGNnDy7/IpuiGDTYUIG5RwqxSx1fMnBTO3f96/pbpQsc/BLkNRdYwRl0TgpCKApE8RBBcfReh1FygMePqyBfX6dWZfdN8xZHE5opJtFuZzjWAjucZSZT1ZC9tfNyQte0Y5p/1uybJGMsvZ3+Ocic2I84CpT5fXsJx1Gbe+gNblzzq5q+MpxedZYVfqJTflMJjzxGiN61+0ABxg5W5zJ1233oVbzqbs4COGhOk6yPOW9DZS9bL8CHAYeX74l6JfXi+d6qrEOyRzzY+T8Mz8iVv7OeHm6tOpFaquQ95el8Xxmb6WwDNQC/8PauAMvV4BMOMqvNTFqdbHTae6/A/rhI38wI6wuE7ypW1aAvT0Fub+loAfPnW8sm2dz3GH+zSdqc/PIVnFe5VZ0V1RG+eqEmPvZWol7XsWKMJZ+GjkA8+mFxS1P91hszNU3duG9Xt8wOfdsfvFiQDFYYoAQXc+uZUStVKmKN6aGDBVvDM4XCU6cEKperMswsaLb6yGSpKF0GRVUh3p2AThaa6BMnkgQPnebBYXssTC8ukwpb46CY6h9CKRteFpi/Ne3R8EmSXEzjrA1iBfcqiaUmxv4n/3bvi4ZJ/kvNE+hUkq8plneqTTK0DR0i1uy/Lvw4gkxRe+ZlbiYKUlkJHA5/MVX3cs1QqPXrc="
+    organization: xyoraclenetwork
 install:
-  - yarn install
+- yarn install
 script:
-  - yarn build
-  - sonar-scanner
+- yarn build
+- sonar-scanner
+env:
+  global:
+    secure: cfJEqT/AVa2f6OfrM8KG9qSLuRg19oEDPSNL5UNkVJ7kmYSN0dRzkpibjMgy3hgTNl39hrXNhRA04YS1oemDrct23LmAjAZMKTBYyVQxlMQFIAeeHb578HV41wkbdEKA7rjdqm1451wuFsaYhwYZbN7cvtdpjD7WqlGu+zfc+9poZvewWFF/jfcPAu++DGGJ2qg3fiNsEveD8mV+3MOURT4w1oNSNhvyN5I3jtXjCJINxquzEAUgaoOTgqvzOT4EhOgGrjbknOF5kyES4rHV+fMJrjXLa6LQBnqY9bAIcxLs6TN+pq2mb1s2MotfM1tph8wrIxBbcHg0wIzMq2wjowaTiPiAjJrXoKzCRFzFtVOU+BkMZj6fBw85B1JQb8V1d0U2IzJ3I8crzIfSzl2djTPeK/70Lh1P1pJ/WHCeWKDtrYhFluRSa0vv7dW8T+bGIiV/axbtZtHUKpWBcPIuGv6Y0t/nS+msIRbfSbWj+kI+GLJnCthSxY+Wd8J3b/zzmRgg4Yf0QySvUM72W8oIAgUGsCGcrHoqWVTbP/EcwMEA0iSvO3jlu/EblrknMr6k/1rS5Kb0Ep5slMFJslUQLSXdqbO3OxeEUg9jefy7SPVqJHgbvqJgr3xZsYltJ2hKxkdC4hE/afwTSkRuyh1c4N+hAj79535P1os5pkhyW7A=
