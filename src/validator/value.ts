@@ -18,6 +18,8 @@ export class ValueValidator extends Validator<ValueConfig> {
       switch (this.config.disposition) {
         case 'required':
           return this.validateRequired()
+        case 'optional':
+          return this.validateOptional()
       }
     }
     console.log(chalk.gray(
@@ -37,6 +39,21 @@ export class ValueValidator extends Validator<ValueConfig> {
         console.log(chalk.gray(`Required Value Check Passed [${this.context}]: ${this.config}`))
       } else {
         this.addError(this.context, `Required value missing: ${this.config}:${JSON.stringify(this.data)}`)
+      }
+    }
+    return super.validate()
+  }
+
+  private validateOptional() {
+    if (this.config.filter) {
+      let matchesFound = 0
+      for (const data of this.data) {
+        if (this.checkValue(this.config.filter, data)) {
+          matchesFound++
+        }
+      }
+      if (matchesFound === this.data.length) {
+        console.log(chalk.gray(`Optional Value Check Passed [${this.context}]: ${this.config}`))
       }
     }
     return super.validate()

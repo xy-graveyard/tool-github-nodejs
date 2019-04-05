@@ -49,35 +49,47 @@ export class XyGithubScan {
   }
 
   public async start(
-    params: {output: string, singleRepo?: string, bucket?: string, config?: MasterConfig, preflight?: string}
+    params: {
+      output: string,
+      singleRepo?: {owner: string, name: string, branch: "master"},
+      bucket?: string,
+      config?: MasterConfig,
+      preflight?: string
+    }
   ) {
     this.config = await this.loadConfig()
     this.preflight = params.preflight
 
     // if repository specified, clear configed repositorys and add it
     if (params.singleRepo) {
-      console.log(chalk.yellow(`Configuring Single Repository: ${params.singleRepo}`))
+      console.log(chalk.yellow(`Configuring Single Repository: ${params.singleRepo.owner}/${params.singleRepo.name}`))
       const singleRepoConfig = this.config.getRepositoryConfig(params.singleRepo)
       this.config.repositories.set(
-        singleRepoConfig.name,
+        singleRepoConfig.key,
         singleRepoConfig
       )
 
+      // since we are doing just one, disable github list get
+      this.config.github.enabled = false
+
       // since we are only doing one, remove the rest
       for (const repository of this.config.repositories.values()) {
-        if (repository.name !== "default" && repository.name !== params.singleRepo) {
+        if (repository.name !== "default" &&
+            (repository.name !== params.singleRepo.name || repository.owner !== params.singleRepo.owner)
+        ) {
           this.config.repositories.delete(repository.key)
         }
       }
     }
 
     if (this.preflight) {
+      if (typeof this.preflight !== 'string') {
+        this.preflight = 'githublint_preflight.json'
+      }
       await this.saveToFile(this.preflight, this.config)
     }
 
     this.validator = new MasterValidator(this.config)
-
-    console.log(`Repositories Found: ${this.config.repositories.size}`)
 
     await this.validator.validate()
 

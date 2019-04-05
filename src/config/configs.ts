@@ -28,16 +28,18 @@ export class Configs<T extends Config> extends Map<string, T> {
   // we pass in a new object to prevent writing to authority objects
   public getConfig(key: string, newObject: T): T | undefined {
     const defaultItem = this.get("default")
-    const item = this.get(key)
+    let item = this.get(key)
     if (item) {
       if (defaultItem) {
-        return newObject.merge(defaultItem).merge(item)
+        item = newObject.merge(defaultItem).merge(item)
       }
-      return item
     }
     if (defaultItem) {
-      return newObject.merge(defaultItem)
+      item = newObject.merge(defaultItem)
     }
-    return undefined
+    if (item) {
+      item.key = key
+    }
+    return item
   }
 }

@@ -6,10 +6,19 @@
   "repositories": [
     {
       "name": "default",
-      "enabled": true,
       "branches": [
         {
-          "name": "master"
+          "name": "master",
+          "content": [
+            {
+              "filter": "buildspec.yml",
+              "disposition": "required"
+            },
+            {
+              "filter": "buildspec.yml",
+              "disposition": "required"
+            }
+          ]
         }
       ]
     }

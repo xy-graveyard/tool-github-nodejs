@@ -1,4 +1,4 @@
-import { AWSConfig } from './aws'
+import { GithubConfig } from './github'
 import _ from 'lodash'
 import { Config } from './config'
 import { Configs } from './configs'
@@ -22,23 +22,24 @@ export class MasterConfig extends Config {
     return master
   }
 
-  public aws = new AWSConfig("aws")
+  public github = new GithubConfig("github")
   public repositories = new Configs<RepositoryConfig>()
 
   public merge(config?: MasterConfig) {
     if (config) {
-      this.aws = this.aws.merge(config.aws)
+      this.github = this.github.merge(config.github)
       this.repositories = this.repositories.merge(config.repositories)
     }
     return this
   }
 
-  public getRepositoryConfig(repository: string) {
-    let result = new RepositoryConfig(repository)
+  public getRepositoryConfig({ owner, name, branch }: {owner: string, name: string, branch: string}) {
+    let result = new RepositoryConfig({ owner, name, branch })
     if (this.repositories !== undefined) {
-      result = this.repositories.getConfig(repository, result) || result
+      result = this.repositories.getConfig(`${owner}/${name}`, result) || result
     }
-    result.name = repository
+    result.owner = owner
+    result.name = name
     return result
   }
 }

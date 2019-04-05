@@ -1,7 +1,6 @@
 import { MasterConfig } from '../config'
 import { Validator } from './validator'
 import { RepositoryValidator } from './repository'
-import { AWS } from '../aws'
 import chalk from 'chalk'
 import Octokit from '@octokit/rest'
 import fs from 'fs-extra'
@@ -17,7 +16,7 @@ export class MasterValidator extends Validator<MasterConfig> {
 
   public async validate() {
     this.addRepositoriesFromConfig()
-    if (this.config.aws && this.config.aws.enabled) {
+    if (this.config.github && this.config.github.enabled) {
       await this.addRepositoriesFromGithub()
     }
 
@@ -27,7 +26,7 @@ export class MasterValidator extends Validator<MasterConfig> {
         const errors = await repository.validate()
         completedRepositories++
         console.log(
-          `Domain:[${completedRepositories}/${this.repositories.length}]: ${repository.name}`)
+          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.name}`)
         this.errorCount += errors
       } catch (ex) {
         this.addError("MasterValidator.validate", `Unexpected Error: ${ex.message}`)
@@ -44,8 +43,9 @@ export class MasterValidator extends Validator<MasterConfig> {
     if (this.config.repositories) {
       for (const repository of this.config.repositories.values()) {
         if (repository.name !== "default") {
-          console.log(chalk.yellow(`Adding Domain from Config: ${repository.name}`))
-          const repositoryConfig = this.config.getRepositoryConfig(repository.name)
+          console.log(chalk.yellow(`Adding Repo from Config: ${repository.name}`))
+          const repositoryConfig = this.config.getRepositoryConfig(
+            { name: repository.name, owner: repository.owner, branch: "master" })
           this.repositories.push(new RepositoryValidator(repositoryConfig))
         }
       }

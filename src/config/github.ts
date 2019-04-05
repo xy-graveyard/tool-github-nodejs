@@ -1,5 +1,5 @@
 import { Config } from "./config"
 
-export class AWSConfig extends Config {
+export class GithubConfig extends Config {
   public filter?: string
 }
