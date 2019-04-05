@@ -15,7 +15,7 @@ export class RepositoryConfig extends Config {
     assert(typeof srcObj.name === "string")
 
     let repository = new RepositoryConfig(
-      { name: srcObj.name || "default", owner: srcObj.owner || "default", branch: "master" }
+      { name: srcObj.name || "*", owner: srcObj.owner || "*", branch: "master" }
     )
     repository = _.merge(repository, srcObj)
     return repository

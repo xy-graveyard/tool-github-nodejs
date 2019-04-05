@@ -14,7 +14,7 @@ export class Validator<T extends Config> {
   }
 
   public toJSON () {
-    return _.omit(this, ["config"])
+    return _.omit(this, ["config", "octokit"])
   }
 
   public async validate() {
@@ -29,14 +29,12 @@ export class Validator<T extends Config> {
     this.errors = this.errors || []
     this.errors.push(new ValidationError(action, error))
     console.error(chalk.red(`${action}: ${error}`))
-    this.errorCount++
   }
 
   public addErrors(errors: ValidationError[] | undefined) {
     if (errors) {
       this.errors = this.errors || []
       this.errors = this.errors.concat(errors)
-      this.errorCount += errors.length
     }
   }
 

@@ -26,7 +26,7 @@ export class MasterValidator extends Validator<MasterConfig> {
         const errors = await repository.validate()
         completedRepositories++
         console.log(
-          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.name}`)
+          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.config.key}`)
         this.errorCount += errors
       } catch (ex) {
         this.addError("MasterValidator.validate", `Unexpected Error: ${ex.message}`)
@@ -42,7 +42,7 @@ export class MasterValidator extends Validator<MasterConfig> {
   private addRepositoriesFromConfig() {
     if (this.config.repositories) {
       for (const repository of this.config.repositories.values()) {
-        if (repository.name !== "default") {
+        if (repository.name !== "*") {
           console.log(chalk.yellow(`Adding Repo from Config: ${repository.name}`))
           const repositoryConfig = this.config.getRepositoryConfig(
             { name: repository.name, owner: repository.owner, branch: "master" })
@@ -76,7 +76,10 @@ export class MasterValidator extends Validator<MasterConfig> {
 
         for (const repo of repos.data) {
           console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
-          this.repositories.push(new RepositoryValidator(new RepositoryConfig(repo.full_name), repo))
+          const nameParts = repo.full_name.split('/')
+          this.repositories.push(
+            new RepositoryValidator(
+              new RepositoryConfig({ name: nameParts[1], owner: nameParts[0], branch: 'master' }), repo))
         }
       }
     } catch (ex) {

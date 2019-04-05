@@ -53,6 +53,20 @@
         "disposition": {"$ref": "#/definitions/disposition"}
       }
     },
+    "owner": {
+      "$id": "#definitions/repository",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "repositories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/repository"
+          }
+        }
+      }
+    },
     "repository": {
       "$id": "#definitions/repository",
       "additionalProperties": false,
@@ -85,10 +99,10 @@
     "$schema": {"type": "string"},
     "additionalProperties": false,
     "github": {"$ref": "#/definitions/source"},
-    "repositories": {
+    "owners": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/repository"
+        "$ref": "#/definitions/owner"
       }
     }
   }

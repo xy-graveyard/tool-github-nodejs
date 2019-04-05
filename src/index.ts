@@ -74,7 +74,7 @@ export class XyGithubScan {
 
       // since we are only doing one, remove the rest
       for (const repository of this.config.repositories.values()) {
-        if (repository.name !== "default" &&
+        if (repository.name !== "*" &&
             (repository.name !== params.singleRepo.name || repository.owner !== params.singleRepo.owner)
         ) {
           this.config.repositories.delete(repository.key)

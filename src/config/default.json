@@ -3,20 +3,25 @@
   "github": {
     "enabled": true
   },
-  "repositories": [
+  "owners": [
     {
-      "name": "default",
-      "branches": [
+      "name": "*",
+      "repositories": [
         {
-          "name": "master",
-          "content": [
+          "name": "*",
+          "branches": [
             {
-              "filter": "buildspec.yml",
-              "disposition": "required"
-            },
-            {
-              "filter": "buildspec.yml",
-              "disposition": "required"
+              "name": "master",
+              "content": [
+                {
+                  "filter": "buildspec.yml",
+                  "disposition": "required"
+                },
+                {
+                  "filter": "buildspec.yml",
+                  "disposition": "required"
+                }
+              ]
             }
           ]
         }
