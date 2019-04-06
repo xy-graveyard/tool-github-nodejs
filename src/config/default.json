@@ -9,19 +9,25 @@
       "repositories": [
         {
           "name": "*",
+          "raw": {
+            "enabled": true
+          },
           "branches": [
             {
-              "name": "master",
+              "name": "*",
               "content": [
                 {
                   "filter": "buildspec.yml",
                   "disposition": "required"
                 },
                 {
-                  "filter": "buildspec.yml",
+                  "filter": "travis.yml",
                   "disposition": "required"
                 }
               ]
+            },
+            {
+              "name": "master"
             }
           ]
         }

@@ -11,6 +11,7 @@
     "no-implicit-dependencies": [true, "dev"],
     "interface-name":false,
     "no-bitwise": false,
-    "quotemark": false
+    "quotemark": false,
+    "prefer-array-literal": false
   }
 }

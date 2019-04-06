@@ -1,15 +1,16 @@
 import { AWS } from './aws'
 import fs from 'fs'
-import { MasterConfig } from './config'
 import chalk from 'chalk'
 import { MasterValidator } from './validator/master'
 import defaultConfigJson from './config/default.json'
 import loadJsonFile from 'load-json-file'
+import { GithublintSchemaJson, Owner, Repository } from './types/schema'
+import _ from 'lodash'
 
 export class XyGithubScan {
 
-  private config = new MasterConfig("master")
-  private validator = new MasterValidator(new MasterConfig("master"))
+  private config: GithublintSchemaJson  = {}
+  private validator = new MasterValidator(this.config)
   private preflight?: string
   private aws = new AWS()
 
@@ -23,18 +24,27 @@ export class XyGithubScan {
       } else {
         console.log(chalk.green("Default Config Validated"))
       }*/
-      const defaultConfig = MasterConfig.parse(defaultConfigJson)
+
+      const defaultConfig: GithublintSchemaJson = {
+        github: defaultConfigJson.github,
+        owners: defaultConfigJson.owners
+      }
       console.log(chalk.gray("Loaded Default Config"))
       try {
-        const userConfigJson = await loadJsonFile(filenameToLoad)
-        const userConfig = MasterConfig.parse(userConfigJson)
+        const userConfigJson: any = await loadJsonFile(filenameToLoad)
+        const userConfig: GithublintSchemaJson = {
+          github: userConfigJson.github,
+          owners: userConfigJson.owners
+        }
         /*if (!validate(userJson)) {
           console.error(chalk.red(`${validate.errors}`))
         } else {
           console.log(chalk.green("User Config Validated"))
         }*/
         console.log(chalk.gray("Loaded User Config"))
-        const result = defaultConfig.merge(userConfig)
+        let result: GithublintSchemaJson = {}
+        result = _.merge(result, userConfig)
+        result = _.merge(result, defaultConfig)
         return result
       } catch (ex) {
         console.log(chalk.yellow(`No githublint.json config file found.  Using defaults: ${ex.message}`))
@@ -44,16 +54,48 @@ export class XyGithubScan {
     } catch (ex) {
       console.log(chalk.red(`Failed to load defaults: ${ex}`))
       console.error(ex.stack)
-      return new MasterConfig("master")
+      return {}
     }
+  }
+
+  public getMergedRepositoryConfig(owner: string, name: string) {
+    if (this.config.owners) {
+      const defaultItem = this.getConfigByKey(this.config.owners, owner, 'name')
+      const index = this.config.owners.findIndex((value: Owner) => {
+        return (value.name === owner)
+      })
+      if (index > -1) {
+        return this.config.owners
+      }
+    }
+  }
+
+  public addOwnerIfNeeded(name: string): Owner {
+    let owner: Owner = this.getConfigByKey(this.config.owners, name, 'name')
+    if (!owner) {
+      owner = { name }
+      this.config.owners = this.config.owners || []
+      this.config.owners.push(owner)
+    }
+    return owner
+  }
+
+  public addRepositoryIfNeeded(owner: Owner, name: string): Repository {
+    let repo: Repository = this.getConfigByKey(owner.repositories, name, 'name')
+    if (!repo) {
+      repo = { name }
+      owner.repositories = owner.repositories || []
+      owner.repositories.push(repo)
+    }
+    return repo
   }
 
   public async start(
     params: {
       output: string,
-      singleRepo?: {owner: string, name: string, branch: "master"},
+      singleRepo?: { owner: string, name: string, branch: "master" },
       bucket?: string,
-      config?: MasterConfig,
+      config?: GithublintSchemaJson,
       preflight?: string
     }
   ) {
@@ -63,21 +105,21 @@ export class XyGithubScan {
     // if repository specified, clear configed repositorys and add it
     if (params.singleRepo) {
       console.log(chalk.yellow(`Configuring Single Repository: ${params.singleRepo.owner}/${params.singleRepo.name}`))
-      const singleRepoConfig = this.config.getRepositoryConfig(params.singleRepo)
-      this.config.repositories.set(
-        singleRepoConfig.key,
-        singleRepoConfig
-      )
+      const singleOwner = this.addOwnerIfNeeded(params.singleRepo.owner)
+      const singleRepo = this.addRepositoryIfNeeded(singleOwner, params.singleRepo.name)
 
       // since we are doing just one, disable github list get
+      this.config.github = this.config.github || {}
       this.config.github.enabled = false
 
+      this.config.owners = this.config.owners || []
+
       // since we are only doing one, remove the rest
-      for (const repository of this.config.repositories.values()) {
-        if (repository.name !== "*" &&
-            (repository.name !== params.singleRepo.name || repository.owner !== params.singleRepo.owner)
+      for (const owner of this.config.owners) {
+        if (owner.name !== "*" &&
+            (owner.name !== singleOwner)
         ) {
-          this.config.repositories.delete(repository.key)
+          owner.enabled = false
         }
       }
     }
@@ -105,6 +147,18 @@ export class XyGithubScan {
       console.error(chalk.yellow(`Total Errors Found: ${this.validator.errorCount}`))
     }
     return this.validator
+  }
+
+  private getConfigByKey(items: any[] | undefined, key: any, keyProperty: string) {
+    if (items) {
+      const index = items.findIndex((value: Owner) => {
+        return (value[keyProperty] === key)
+      })
+      if (index > -1) {
+        return items[index]
+      }
+    }
+    return
   }
 
   private getLatestS3FileName() {

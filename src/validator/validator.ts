@@ -1,9 +1,8 @@
 import chalk from 'chalk'
 import { ValidationError } from './error'
 import _ from 'lodash'
-import { Config } from '../config/config'
 
-export class Validator<T extends Config> {
+export class Validator<T> {
   public config: T
   public validations: any[] = []
   public errors?: ValidationError[]

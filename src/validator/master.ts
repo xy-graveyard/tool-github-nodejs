@@ -1,21 +1,19 @@
-import { MasterConfig } from '../config'
 import { Validator } from './validator'
 import { RepositoryValidator } from './repository'
 import chalk from 'chalk'
 import Octokit from '@octokit/rest'
 import fs from 'fs-extra'
-import { RepositoryConfig } from '../config/repository'
+import { GithublintSchemaJson } from '../types/schema'
 
-export class MasterValidator extends Validator<MasterConfig> {
+export class MasterValidator extends Validator<GithublintSchemaJson> {
 
   public repositories: RepositoryValidator[] = []
 
-  constructor(config: MasterConfig) {
+  constructor(config: GithublintSchemaJson) {
     super(config)
   }
 
   public async validate() {
-    this.addRepositoriesFromConfig()
     if (this.config.github && this.config.github.enabled) {
       await this.addRepositoriesFromGithub()
     }
@@ -26,7 +24,7 @@ export class MasterValidator extends Validator<MasterConfig> {
         const errors = await repository.validate()
         completedRepositories++
         console.log(
-          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.config.key}`)
+          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.config.name}`)
         this.errorCount += errors
       } catch (ex) {
         this.addError("MasterValidator.validate", `Unexpected Error: ${ex.message}`)
@@ -37,19 +35,6 @@ export class MasterValidator extends Validator<MasterConfig> {
     }
 
     return super.validate()
-  }
-
-  private addRepositoriesFromConfig() {
-    if (this.config.repositories) {
-      for (const repository of this.config.repositories.values()) {
-        if (repository.name !== "*") {
-          console.log(chalk.yellow(`Adding Repo from Config: ${repository.name}`))
-          const repositoryConfig = this.config.getRepositoryConfig(
-            { name: repository.name, owner: repository.owner, branch: "master" })
-          this.repositories.push(new RepositoryValidator(repositoryConfig))
-        }
-      }
-    }
   }
 
   private async addRepositoriesFromGithub() {
@@ -78,8 +63,7 @@ export class MasterValidator extends Validator<MasterConfig> {
           console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
           const nameParts = repo.full_name.split('/')
           this.repositories.push(
-            new RepositoryValidator(
-              new RepositoryConfig({ name: nameParts[1], owner: nameParts[0], branch: 'master' }), repo))
+            new RepositoryValidator(repo))
         }
       }
     } catch (ex) {
