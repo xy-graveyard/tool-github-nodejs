@@ -40,6 +40,7 @@ export interface Repository {
   }
   branches?: Branch[]
   integrations?: Integration[]
+  badges?: Badge[]
   content?: Content[]
   public?: boolean
 }
@@ -51,7 +52,19 @@ export interface Branch {
   default?: {
     [k: string]: any
   }
-  content?: Content[]
+  [k: string]: any
+}
+export interface Integration {
+  name?: string
+  enabled?: boolean
+  disposition?: Disposition
+  [k: string]: any
+}
+export interface Badge {
+  name?: string
+  enabled?: boolean
+  disposition?: Disposition
+  [k: string]: any
 }
 export interface Content {
   name?: string
@@ -61,11 +74,5 @@ export interface Content {
     path?: string
     [k: string]: any
   }
-  detection?: boolean
-  contains?: string
-}
-export interface Integration {
-  name?: string
-  enabled?: boolean
-  disposition?: Disposition
+  [k: string]: any
 }
