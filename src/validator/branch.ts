@@ -27,7 +27,7 @@ export class BranchValidator extends Validator<Branch> {
 
     let raw: any
 
-    if (!this.config.isEnabled()) {
+    if (this.config.enabled === false) {
       console.log(chalk.gray(`Skipping Disabled Repo: ${this.name}`))
       return 0
     }
@@ -36,9 +36,6 @@ export class BranchValidator extends Validator<Branch> {
 
     try {
       raw = await this.octokit.repos.getBranch({ owner: this.owner, repo:this.repo, branch:this.name })
-      if (this.config.raw.isEnabled()) {
-        this.raw = raw
-      }
     } catch (ex) {
       if (ex.status === 404) {
         this.addError('branch', `Repo Not Found [${this.owner}/${this.repo}:${this.name}]`)

@@ -62,15 +62,15 @@ export class RepositoryValidator extends Validator<Repository> {
   }
 
   private async validateContent(octokit: Octokit) {
-    let errorCount = 0
+    const errorCount = 0
     if (this.config.branches) {
       const items = (await octokit.repos.getContents({ owner: this.owner, repo:this.name, path:"" })).data
       const branch = this.getMergedBranchConfig("*")
-      for (const content of branch.content) {
+      /*for (const content of branch.content) {
         const validator = new ContentValidator(content, this.owner, this.name, items)
         errorCount += await validator.validate(octokit)
         this.content.push(validator)
-      }
+      }*/
     }
     return errorCount
   }
