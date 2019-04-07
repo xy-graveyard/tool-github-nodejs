@@ -31,13 +31,6 @@ export interface Language {
 export interface Repository {
   name?: string
   enabled?: boolean
-  /**
-   * Settings for pulling in raw data from github
-   */
-  raw?: {
-    enabled?: boolean
-    [k: string]: any
-  }
   branches?: Branch[]
   integrations?: Integration[]
   content?: Content[]
