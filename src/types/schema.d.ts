@@ -58,4 +58,6 @@ export interface Content {
     path?: string
     [k: string]: any
   }
+  detection?: boolean
+  contains?: string
 }

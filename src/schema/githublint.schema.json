@@ -50,7 +50,9 @@
                     "properties": {
                       "path": {"type": "string"}
                     }
-                  }
+                  },
+        "detection": {"type": "boolean"},
+        "contains": {"type": "string"}
       }
     },
     "owner": {
