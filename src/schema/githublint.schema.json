@@ -42,7 +42,12 @@
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
         "disposition": {"$ref": "#/definitions/disposition"},
-        "filter": {"type": "string"}
+        "filter": {
+                    "type": "object",
+                    "properties": {
+                      "path": {"type": "string"}
+                    }
+                  }
       }
     },
     "badge": {

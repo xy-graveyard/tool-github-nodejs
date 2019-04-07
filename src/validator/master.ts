@@ -9,8 +9,8 @@ export class MasterValidator extends Validator<GithublintSchemaJson> {
 
   public repositories: RepositoryValidator[] = []
 
-  constructor(config: GithublintSchemaJson) {
-    super(config)
+  constructor(config: GithublintSchemaJson, data?: any) {
+    super(config, data)
   }
 
   public async validate(octokit: Octokit) {
@@ -19,13 +19,13 @@ export class MasterValidator extends Validator<GithublintSchemaJson> {
     }
 
     let completedRepositories = 0
-    for (const repository of Object.values(this.repositories)) {
+    for (const repository of this.repositories) {
       try {
-        const errors = await repository.validate(octokit)
         completedRepositories++
         console.log(
-          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.owner}/${repository.name}`)
-        this.errorCount += errors
+          `Repo:[${completedRepositories}/${this.repositories.length}]: \
+          ${repository.owner}/${repository.name}[${repository.language}]`)
+        this.errorCount += await repository.validate(octokit)
       } catch (ex) {
         this.addError("MasterValidator.validate", `Unexpected Error: ${ex.message}`)
         console.error(chalk.red(ex.message))
@@ -90,11 +90,14 @@ export class MasterValidator extends Validator<GithublintSchemaJson> {
         }
 
         for (const repo of repos.data) {
-          console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
-          const nameParts = repo.full_name.split('/')
-          this.repositories.push(
-            new RepositoryValidator(
-              this.getMergedRepositoryConfig(repo.owner.login, repo.name), repo.owner.login, repo.name))
+          if (repo.archived) {
+            console.log(chalk.gray(`Skipping Archived Repo: ${repo.full_name}`))
+          } else {
+            console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
+            this.repositories.push(
+              new RepositoryValidator(
+                this.getMergedRepositoryConfig(repo.owner.login, repo.name), repo.owner.login, repo.name, repo))
+          }
         }
       }
     } catch (ex) {

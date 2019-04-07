@@ -7,19 +7,11 @@ import { Content } from '../types/schema'
 
 export class ContentValidator extends Validator<Content> {
 
-  public owner: string
-  public repo: string
-  public items: any[]
+  public description: string
 
-  constructor (config: Content, owner: string, repo: string, items: any[]) {
-    super(config)
-    this.owner = owner
-    this.repo = repo
-    this.items = items
-  }
-
-  public toJSON () {
-    return _.omit(this, ["config", "octokit", "items"])
+  constructor (config: Content, owner: string, repo: string, data?: any[]) {
+    super(config, data)
+    this.description = `${owner}/${repo}/${JSON.stringify(config.filter)}`
   }
 
   public async validate(octokit: Octokit) {
@@ -30,14 +22,16 @@ export class ContentValidator extends Validator<Content> {
     }
 
     let found = false
-    for (const item of this.items) {
-      if (item.name.match(this.config.filter)) {
-        found = true
+    for (const item of this.data) {
+      if (this.config.filter) {
+        if (item.path.match(this.config.filter.path)) {
+          found = true
+        }
       }
     }
 
     if (!found && this.config.disposition === 'required') {
-      this.addError('content', `Required file missing: ${this.config.filter}`)
+      this.addError('content', `Required file missing: ${JSON.stringify(this.config.filter)}`)
     }
 
     if (this.errorCount) {

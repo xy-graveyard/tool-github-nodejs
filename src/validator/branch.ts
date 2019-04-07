@@ -16,8 +16,8 @@ export class BranchValidator extends Validator<Branch> {
   public raw: any = undefined
   public octokit = new Octokit()
 
-  constructor (config: Branch, owner: string, repo: string) {
-    super(config)
+  constructor (config: Branch, owner: string, repo: string, data?: any) {
+    super(config, data)
     this.name = config.name || 'unknown'
     this.owner = owner
     this.repo = repo

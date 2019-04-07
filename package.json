@@ -1,6 +1,6 @@
 {
   "name": "githublint",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "XYO Internal Github Tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

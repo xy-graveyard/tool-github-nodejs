@@ -70,6 +70,9 @@ export interface Content {
   name?: string
   enabled?: boolean
   disposition?: Disposition
-  filter?: string
+  filter?: {
+    path?: string
+    [k: string]: any
+  }
   [k: string]: any
 }

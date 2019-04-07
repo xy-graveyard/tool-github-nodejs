@@ -7,13 +7,15 @@ export class Validator<T> {
   public config: T
   public errors?: ValidationError[]
   public errorCount = 0
+  public data?: any
 
-  constructor(config: T) {
+  constructor(config: T, data?: any) {
     this.config = config
+    this.data = data
   }
 
   public toJSON () {
-    return _.omit(this, ["config", "octokit"])
+    return _.omit(this, ["config", "octokit", "data"])
   }
 
   public async validate(octokit: Octokit) {

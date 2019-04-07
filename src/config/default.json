@@ -17,24 +17,24 @@
               "name": "*",
               "content": [
                 {
-                  "filter": "buildspec.yml",
+                  "filter": {"path": "buildspec.yml"},
                   "disposition": "required"
                 },
                 {
-                  "filter": "travis.yml",
+                  "filter": {"path": "travis.yml"},
                   "disposition": "required"
                 },
                 {
-                  "filter": "README.md",
+                  "filter": {"path": "README.md"},
                   "disposition": "required"
                 },
                 {
-                  "filter": "sonar-project.properties",
+                  "filter": {"path": "sonar-project.properties"},
                   "disposition": "required"
                 },
                 {
-                  "filter": "githublint.json",
-                  "disposition": "required"
+                  "filter": {"path": "githublint.json"},
+                  "disposition": "optional"
                 }
               ]
             },
@@ -55,25 +55,25 @@
                   "name": "*",
                   "content": [
                     {
-                      "filter": "tsconfig.json",
+                      "filter": {"path": "tsconfig.json"},
                       "disposition": "required",
                       "detection": true
                     },
                     {
-                      "filter": "tslint.json",
+                      "filter": {"path": "tslint.json"},
                       "disposition": "required",
                       "detection": true
                     },
                     {
-                      "filter": "yarn.lock",
+                      "filter": {"path": "yarn.lock"},
                       "disposition": "required"
                     },
                     {
-                      "filter": "package.json",
+                      "filter": {"path": "package.json"},
                       "disposition": "required"
                     },
                     {
-                      "filter": "sonar-project.properties",
+                      "filter": {"path": "sonar-project.properties"},
                       "disposition": "required"
                     }
                   ]
@@ -98,7 +98,7 @@
                       "innertext": "org.jetbrains.kotlin:kotlin-gradle-plugin"
                     },
                     {
-                      "filter": "settings.gradle",
+                      "filter": {"path": "settings.gradle"},
                       "disposition": "required"
                     }
                   ]
@@ -117,35 +117,35 @@
                   "name": "*",
                   "content": [
                     {
-                      "filter": "Podfile",
+                      "filter": {"path": "Podfile"},
                       "disposition": "required"
                     },
                     {
-                      "filter": "Podfile.lock",
+                      "filter": {"path": "Podfile.lock"},
                       "disposition": "required"
                     },
                     {
-                      "filter": "Gemfile",
+                      "filter": {"path": "Gemfile"},
                       "disposition": "required"
                     },
                     {
-                      "filter": "Gemfile.lock",
+                      "filter": {"path": "Gemfile.lock"},
                       "disposition": "required"
                     },
                     {
-                      "filter": ".xcworkspace$",
+                      "filter": {"path": ".xcworkspace$"},
                       "disposition": "required",
                       "detection": true,
                       "folder": true
                     },
                     {
-                      "filter": ".xcodeproj$",
+                      "filter": {"path": ".xcodeproj$"},
                       "disposition": "required",
                       "detection": true,
                       "folder": true
                     },
                     {
-                      "filter": "^fastlane$",
+                      "filter": {"path": "^fastlane$"},
                       "disposition": "required",
                       "folder": true
                     }
@@ -165,7 +165,7 @@
                   "name": "*",
                   "content": [
                     {
-                      "filter": "build.gradle",
+                      "filter": {"path": "build.gradle"},
                       "disposition": "required",
                       "detection": true,
                       "innertext": "com.android.tools.build:gradle"
@@ -186,7 +186,7 @@
                   "name": "*",
                   "content": [
                     {
-                      "filter": "build.gradle",
+                      "filter": {"path": "build.gradle"},
                       "disposition": "required",
                       "detection": true
                     }
