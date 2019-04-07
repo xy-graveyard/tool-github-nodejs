@@ -1,11 +1,12 @@
 import { AWS } from './aws'
-import fs from 'fs'
+import fs from 'fs-extra'
 import chalk from 'chalk'
 import { MasterValidator } from './validator/master'
 import defaultConfigJson from './config/default.json'
 import loadJsonFile from 'load-json-file'
 import { GithublintSchemaJson, Owner, Repository } from './types/schema'
 import _ from 'lodash'
+import Octokit from '@octokit/rest'
 
 export class XyGithubScan {
 
@@ -133,7 +134,10 @@ export class XyGithubScan {
 
     this.validator = new MasterValidator(this.config)
 
-    await this.validator.validate()
+    const auth = (await fs.readFile('accesstoken.txt')).toString()
+    const octokit = new Octokit({ auth })
+
+    await this.validator.validate(octokit)
 
     if (params.bucket) {
       this.saveToAws(params.bucket)

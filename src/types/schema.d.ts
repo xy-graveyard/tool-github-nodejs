@@ -20,6 +20,12 @@ export interface Source {
 export interface Owner {
   name?: string
   enabled?: boolean
+  languages?: Language[]
+  repositories?: Repository[]
+}
+export interface Language {
+  name?: string
+  enabled?: boolean
   repositories?: Repository[]
 }
 export interface Repository {

@@ -2,8 +2,8 @@ import { Validator } from './validator'
 import { RepositoryValidator } from './repository'
 import chalk from 'chalk'
 import Octokit from '@octokit/rest'
-import fs from 'fs-extra'
 import { GithublintSchemaJson } from '../types/schema'
+import _ from 'lodash'
 
 export class MasterValidator extends Validator<GithublintSchemaJson> {
 
@@ -13,18 +13,18 @@ export class MasterValidator extends Validator<GithublintSchemaJson> {
     super(config)
   }
 
-  public async validate() {
+  public async validate(octokit: Octokit) {
     if (this.config.github && this.config.github.enabled) {
-      await this.addRepositoriesFromGithub()
+      await this.addRepositoriesFromGithub(octokit)
     }
 
     let completedRepositories = 0
     for (const repository of Object.values(this.repositories)) {
       try {
-        const errors = await repository.validate()
+        const errors = await repository.validate(octokit)
         completedRepositories++
         console.log(
-          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.config.name}`)
+          `Repo:[${completedRepositories}/${this.repositories.length}]: ${repository.owner}/${repository.name}`)
         this.errorCount += errors
       } catch (ex) {
         this.addError("MasterValidator.validate", `Unexpected Error: ${ex.message}`)
@@ -34,14 +34,44 @@ export class MasterValidator extends Validator<GithublintSchemaJson> {
       }
     }
 
-    return super.validate()
+    return super.validate(octokit)
   }
 
-  private async addRepositoriesFromGithub() {
-    try {
-      const auth = (await fs.readFile('accesstoken.txt')).toString()
-      const octokit = new Octokit({ auth })
+  private getOwnerConfig(name: string) {
+    if (this.config.owners) {
+      for (const owner of this.config.owners) {
+        if (owner.name === name) {
+          return owner
+        }
+      }
+    }
+  }
 
+  private getRepoConfig(owner: any, name: string) {
+    if (owner.repositories) {
+      for (const repository of owner.repositories) {
+        if (repository.name === name) {
+          return repository
+        }
+      }
+    }
+  }
+
+  private getMergedOwnerConfig(ownerName: string) {
+    const defaultOwner = this.getOwnerConfig("*")
+    const owner = this.getOwnerConfig(ownerName)
+    return _.merge({}, defaultOwner, owner)
+  }
+
+  private getMergedRepositoryConfig(ownerName: string, repoName: string) {
+    const owner = this.getMergedOwnerConfig(ownerName)
+    const defaultRepo = this.getRepoConfig(owner, "*")
+    const repo = this.getRepoConfig(owner, repoName)
+    return _.merge({}, defaultRepo, repo)
+  }
+
+  private async addRepositoriesFromGithub(octokit: Octokit) {
+    try {
       let page = 1
       while (page > 0) {
         const repos = await octokit.repos.list(
@@ -63,7 +93,8 @@ export class MasterValidator extends Validator<GithublintSchemaJson> {
           console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
           const nameParts = repo.full_name.split('/')
           this.repositories.push(
-            new RepositoryValidator(repo))
+            new RepositoryValidator(
+              this.getMergedRepositoryConfig(repo.owner.login, repo.name), repo.owner.login, repo.name))
         }
       }
     } catch (ex) {

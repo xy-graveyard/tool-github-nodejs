@@ -60,6 +60,12 @@
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/language"
+          }
+        },
         "repositories": {
           "type": "array",
           "items": {
@@ -96,9 +102,12 @@
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
-        "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
-        "integrations": {"type": "array", "items": {"$ref": "#/definitions/integration"}},
-        "public": {"type": "boolean"}
+        "repositories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/repository"
+          }
+        }
       }
     }
   },

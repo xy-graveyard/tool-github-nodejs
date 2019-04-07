@@ -23,11 +23,191 @@
                 {
                   "filter": "travis.yml",
                   "disposition": "required"
+                },
+                {
+                  "filter": "README.md",
+                  "disposition": "required"
+                },
+                {
+                  "filter": "sonar-project.properties",
+                  "disposition": "required"
+                },
+                {
+                  "filter": "githublint.json",
+                  "disposition": "required"
                 }
               ]
             },
             {
               "name": "master"
+            }
+          ]
+        }
+      ],
+      "languages": [
+        {
+          "name": "typescript",
+          "repositories": [
+            {
+              "name": "*",
+              "branches": [
+                {
+                  "name": "*",
+                  "content": [
+                    {
+                      "filter": "tsconfig.json",
+                      "disposition": "required",
+                      "detection": true
+                    },
+                    {
+                      "filter": "tslint.json",
+                      "disposition": "required",
+                      "detection": true
+                    },
+                    {
+                      "filter": "yarn.lock",
+                      "disposition": "required"
+                    },
+                    {
+                      "filter": "package.json",
+                      "disposition": "required"
+                    },
+                    {
+                      "filter": "sonar-project.properties",
+                      "disposition": "required"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "kotlin",
+          "repositories": [
+            {
+              "name": "*",
+              "branches": [
+                {
+                  "name": "*",
+                  "content": [
+                    {
+                      "filter": "build.gradle",
+                      "disposition": "required",
+                      "detection": true,
+                      "innertext": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+                    },
+                    {
+                      "filter": "settings.gradle",
+                      "disposition": "required"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "swift",
+          "repositories": [
+            {
+              "name": "*",
+              "branches": [
+                {
+                  "name": "*",
+                  "content": [
+                    {
+                      "filter": "Podfile",
+                      "disposition": "required"
+                    },
+                    {
+                      "filter": "Podfile.lock",
+                      "disposition": "required"
+                    },
+                    {
+                      "filter": "Gemfile",
+                      "disposition": "required"
+                    },
+                    {
+                      "filter": "Gemfile.lock",
+                      "disposition": "required"
+                    },
+                    {
+                      "filter": ".xcworkspace$",
+                      "disposition": "required",
+                      "detection": true,
+                      "folder": true
+                    },
+                    {
+                      "filter": ".xcodeproj$",
+                      "disposition": "required",
+                      "detection": true,
+                      "folder": true
+                    },
+                    {
+                      "filter": "^fastlane$",
+                      "disposition": "required",
+                      "folder": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "android",
+          "repositories": [
+            {
+              "name": "*",
+              "branches": [
+                {
+                  "name": "*",
+                  "content": [
+                    {
+                      "filter": "build.gradle",
+                      "disposition": "required",
+                      "detection": true,
+                      "innertext": "com.android.tools.build:gradle"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gradle",
+          "repositories": [
+            {
+              "name": "*",
+              "branches": [
+                {
+                  "name": "*",
+                  "content": [
+                    {
+                      "filter": "build.gradle",
+                      "disposition": "required",
+                      "detection": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "react",
+          "repositories": [
+            {
+              "name": "*",
+              "branches": [
+                {
+                  "name": "*",
+                  "content": [
+                  ]
+                }
+              ]
             }
           ]
         }

@@ -23,7 +23,7 @@ export class BranchValidator extends Validator<Branch> {
     this.repo = repo
   }
 
-  public async validate() {
+  public async validate(octokit: Octokit) {
 
     let raw: any
 
@@ -49,6 +49,6 @@ export class BranchValidator extends Validator<Branch> {
       console.log(chalk.yellow(`Errors: ${this.errorCount}`))
     }
 
-    return super.validate()
+    return super.validate(octokit)
   }
 }
