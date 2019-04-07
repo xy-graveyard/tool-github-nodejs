@@ -20,16 +20,19 @@
     },
     "branch": {
       "$id": "#definitions/branch",
+      "additionalProperties": false,
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
         "disposition": {"$ref": "#/definitions/disposition"},
         "protected": {"type": "boolean"},
-        "default": {"types": "boolean"}
+        "default": {"types": "boolean"},
+        "content": {"type": "array", "items": {"$ref": "#/definitions/content"}}
       }
     },
     "integration": {
       "$id": "#definitions/integration",
+      "additionalProperties": false,
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
@@ -38,6 +41,7 @@
     },
     "content": {
       "$id": "#definitions/content",
+      "additionalProperties": false,
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
@@ -47,15 +51,9 @@
                     "properties": {
                       "path": {"type": "string"}
                     }
-                  }
-      }
-    },
-    "badge": {
-      "$id": "#definitions/badge",
-      "properties": {
-        "name": {"type": "string"},
-        "enabled": {"type": "boolean"},
-        "disposition": {"$ref": "#/definitions/disposition"}
+                  },
+        "detection": {"type": "boolean"},
+        "contains": {"type": "string"}
       }
     },
     "owner": {
@@ -95,7 +93,6 @@
         },
         "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
         "integrations": {"type": "array", "items": {"$ref": "#/definitions/integration"}},
-        "badges": {"type": "array", "items": {"$ref": "#/definitions/badge"}},
         "content": {"type": "array", "items": {"$ref": "#/definitions/content"}},
         "public": {"type": "boolean"}
       }

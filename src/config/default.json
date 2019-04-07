@@ -10,29 +10,58 @@
         {
           "name": "*",
           "raw": {
-            "enabled": true
+            "enabled": false
           },
           "branches": [
             {
               "name": "*",
               "content": [
                 {
+                  "name": "CodeBuild Configuration",
                   "filter": {"path": "buildspec.yml"},
                   "disposition": "required"
                 },
                 {
+                  "name": "Travis CI Configuration",
                   "filter": {"path": "travis.yml"},
                   "disposition": "required"
                 },
                 {
+                  "name": "Readme Markdown File",
                   "filter": {"path": "README.md"},
                   "disposition": "required"
                 },
                 {
+                  "name": "BetterCodeHub Badge",
+                  "filter": {"path": "README.md"},
+                  "disposition": "required",
+                  "contains": "[![BCH compliance]"
+                },
+                {
+                  "name": "CodeClimate Badge",
+                  "filter": {"path": "README.md"},
+                  "disposition": "required",
+                  "contains": "[![Maintainability]"
+                },
+                {
+                  "name": "Codacy Badge",
+                  "filter": {"path": "README.md"},
+                  "disposition": "required",
+                  "contains": "[![Codacy Badge]"
+                },
+                {
+                  "name": "Travis Badge",
+                  "filter": {"path": "README.md"},
+                  "disposition": "required",
+                  "contains": "[![Build Status]"
+                },
+                {
+                  "name": "SonarQube Configuration",
                   "filter": {"path": "sonar-project.properties"},
                   "disposition": "required"
                 },
                 {
+                  "name": "GithubLint Configuration",
                   "filter": {"path": "githublint.json"},
                   "disposition": "optional"
                 }
@@ -92,10 +121,10 @@
                   "name": "*",
                   "content": [
                     {
-                      "filter": "build.gradle",
+                      "filter": {"path": "build.gradle"},
                       "disposition": "required",
                       "detection": true,
-                      "innertext": "org.jetbrains.kotlin:kotlin-gradle-plugin"
+                      "contains": "org.jetbrains.kotlin:kotlin-gradle-plugin"
                     },
                     {
                       "filter": {"path": "settings.gradle"},
@@ -133,21 +162,18 @@
                       "disposition": "required"
                     },
                     {
-                      "filter": {"path": ".xcworkspace$"},
+                      "filter": {"path": ".xcworkspace$", "type": "folder"},
                       "disposition": "required",
-                      "detection": true,
-                      "folder": true
+                      "detection": true
                     },
                     {
-                      "filter": {"path": ".xcodeproj$"},
+                      "filter": {"path": ".xcodeproj$", "type": "folder"},
                       "disposition": "required",
-                      "detection": true,
-                      "folder": true
+                      "detection": true
                     },
                     {
-                      "filter": {"path": "^fastlane$"},
-                      "disposition": "required",
-                      "folder": true
+                      "filter": {"path": "^fastlane$", "type": "folder"},
+                      "disposition": "required"
                     }
                   ]
                 }
@@ -168,7 +194,7 @@
                       "filter": {"path": "build.gradle"},
                       "disposition": "required",
                       "detection": true,
-                      "innertext": "com.android.tools.build:gradle"
+                      "contains": "com.android.tools.build:gradle"
                     }
                   ]
                 }
