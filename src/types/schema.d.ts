@@ -33,7 +33,6 @@ export interface Repository {
   enabled?: boolean
   branches?: Branch[]
   integrations?: Integration[]
-  content?: Content[]
   public?: boolean
 }
 export interface Branch {
@@ -44,11 +43,7 @@ export interface Branch {
   default?: {
     [k: string]: any
   }
-}
-export interface Integration {
-  name?: string
-  enabled?: boolean
-  disposition?: Disposition
+  content?: Content[]
 }
 export interface Content {
   name?: string
@@ -60,4 +55,9 @@ export interface Content {
   }
   detection?: boolean
   contains?: string
+}
+export interface Integration {
+  name?: string
+  enabled?: boolean
+  disposition?: Disposition
 }

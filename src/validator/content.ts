@@ -11,7 +11,7 @@ export class ContentValidator extends Validator<Content> {
 
   constructor (config: Content, owner: string, repo: string, data?: any[]) {
     super(config, data)
-    this.description = `${owner}/${repo}/${JSON.stringify(config.filter)}`
+    this.description = `${owner}/${repo}/${(config.filter || {}).path}`
   }
 
   public async validate(octokit: Octokit) {
@@ -31,7 +31,7 @@ export class ContentValidator extends Validator<Content> {
     }
 
     if (!found && this.config.disposition === 'required') {
-      this.addError('content', `Required file missing: ${JSON.stringify(this.config.filter)}`)
+      this.addError('content', `Required file missing [${this.config.name}]: ${(this.config.filter || {}).path}`)
     }
 
     if (this.errorCount) {

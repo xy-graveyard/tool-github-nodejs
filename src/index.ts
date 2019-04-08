@@ -2,7 +2,7 @@ import { AWS } from './aws'
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import { MasterValidator } from './validator/master'
-import defaultConfigJson from './config/default.json'
+import { defaultConfig } from './config/default'
 import loadJsonFile from 'load-json-file'
 import { GithublintSchemaJson, Owner, Repository } from './types/schema'
 import _ from 'lodash'
@@ -26,10 +26,6 @@ export class XyGithubScan {
         console.log(chalk.green("Default Config Validated"))
       }*/
 
-      const defaultConfig: GithublintSchemaJson = {
-        github: defaultConfigJson.github,
-        owners: defaultConfigJson.owners
-      }
       console.log(chalk.gray("Loaded Default Config"))
       try {
         const userConfigJson: any = await loadJsonFile(filenameToLoad)

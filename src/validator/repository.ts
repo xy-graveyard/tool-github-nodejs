@@ -24,7 +24,10 @@ export class RepositoryValidator extends Validator<Repository> {
     super(config, data)
     this.name = name
     this.owner = owner
-    _.merge(this, _.pick(data, ['language', 'private', 'disabled', 'archived', 'homepage', 'license']))
+    _.merge(this, _.pick(data, ['language', 'private', 'disabled', 'archived', 'homepage']))
+    if (data.license) {
+      this.license = data.license.spdx_id
+    }
   }
 
   public async validate(octokit: Octokit) {
@@ -62,15 +65,17 @@ export class RepositoryValidator extends Validator<Repository> {
   }
 
   private async validateContent(octokit: Octokit) {
-    const errorCount = 0
+    let errorCount = 0
     if (this.config.branches) {
       const items = (await octokit.repos.getContents({ owner: this.owner, repo:this.name, path:"" })).data
       const branch = this.getMergedBranchConfig("*")
-      /*for (const content of branch.content) {
-        const validator = new ContentValidator(content, this.owner, this.name, items)
-        errorCount += await validator.validate(octokit)
-        this.content.push(validator)
-      }*/
+      if (branch && branch.content) {
+        for (const content of branch.content) {
+          const validator = new ContentValidator(content, this.owner, this.name, items)
+          errorCount += await validator.validate(octokit)
+          this.content.push(validator)
+        }
+      }
     }
     return errorCount
   }
