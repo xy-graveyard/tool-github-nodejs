@@ -2,14 +2,14 @@
 import { Validator } from './validator'
 import chalk from 'chalk'
 import _ from 'lodash'
-import Octokit from '@octokit/rest'
+import Octokit from '@arietrouw/rest'
 import { Content } from '../types/schema'
 
 export class ContentValidator extends Validator<Content> {
 
   public description: string
 
-  constructor (config: Content, owner: string, repo: string, data?: any[]) {
+  constructor(config: Content, owner: string, repo: string, data?: any[]) {
     super(config, data)
     this.description = `${owner}/${repo}/${(config.filter || {}).path}`
   }

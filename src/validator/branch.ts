@@ -2,7 +2,7 @@
 import { Validator } from './validator'
 import chalk from 'chalk'
 import _ from 'lodash'
-import Octokit from '@octokit/rest'
+import Octokit from '@arietrouw/rest'
 import fs from 'fs-extra'
 import { Branch } from '../types/schema'
 
@@ -16,7 +16,7 @@ export class BranchValidator extends Validator<Branch> {
   public raw: any = undefined
   public octokit = new Octokit()
 
-  constructor (config: Branch, owner: string, repo: string, data?: any) {
+  constructor(config: Branch, owner: string, repo: string, data?: any) {
     super(config, data)
     this.name = config.name || 'unknown'
     this.owner = owner

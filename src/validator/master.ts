@@ -1,7 +1,7 @@
 import { Validator } from './validator'
 import { RepositoryValidator } from './repository'
 import chalk from 'chalk'
-import Octokit from '@octokit/rest'
+import Octokit from '@arietrouw/rest'
 import { GithublintSchemaJson } from '../types/schema'
 import _ from 'lodash'
 

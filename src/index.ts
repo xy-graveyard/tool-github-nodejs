@@ -6,7 +6,7 @@ import { defaultConfig } from './config/default'
 import loadJsonFile from 'load-json-file'
 import { GithublintSchemaJson, Owner, Repository } from './types/schema'
 import _ from 'lodash'
-import Octokit from '@octokit/rest'
+import Octokit from '@arietrouw/rest'
 
 export class XyGithubScan {
 

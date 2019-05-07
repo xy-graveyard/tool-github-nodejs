@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import { ValidationError } from './error'
-import Octokit from '@octokit/rest'
+import Octokit from '@arietrouw/rest'
 import _ from 'lodash'
 
 export class Validator<T> {
@@ -14,7 +14,7 @@ export class Validator<T> {
     this.data = data
   }
 
-  public toJSON () {
+  public toJSON() {
     return _.omit(this, ["config", "octokit", "data"])
   }
 

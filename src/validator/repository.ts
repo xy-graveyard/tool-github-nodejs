@@ -2,7 +2,7 @@
 import { Validator } from './validator'
 import chalk from 'chalk'
 import _ from 'lodash'
-import Octokit from '@octokit/rest'
+import Octokit from '@arietrouw/rest'
 import { Repository } from '../types/schema'
 import { ContentValidator } from './content'
 
@@ -20,7 +20,7 @@ export class RepositoryValidator extends Validator<Repository> {
   public archived?: boolean
   public content: ContentValidator[] = []
 
-  constructor (config: Repository, owner: string, name: string, data?: any) {
+  constructor(config: Repository, owner: string, name: string, data?: any) {
     super(config, data)
     this.name = name
     this.owner = owner
