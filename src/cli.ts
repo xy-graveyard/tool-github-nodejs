@@ -19,6 +19,7 @@ program
   .version(getVersion())
   .option("-o, --output [value]", "output file path", "githublint-report.json")
   .option("-p, --preflight [value]", "generates preflight report")
+  .option("-a, --account [value]", "owner account of repository to check")
   .option("-r, --repository [value]", "repository to check")
   .option("-b, --bucket [value]", "s3 bucket to write result to")
 
@@ -29,7 +30,7 @@ const tool = new XyGithubScan()
 tool.start(
   {
     output: program.output,
-    singleRepo: program.repository,
+    singleRepo: program.repository ? { name: program.repository, owner: program.account, branch: "master" } : undefined,
     bucket: program.bucket,
     preflight: program.preflight
   }

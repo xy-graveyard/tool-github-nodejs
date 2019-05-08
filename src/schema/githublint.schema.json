@@ -20,28 +20,61 @@
     },
     "branch": {
       "$id": "#definitions/branch",
+      "additionalProperties": false,
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
         "disposition": {"$ref": "#/definitions/disposition"},
         "protected": {"type": "boolean"},
-        "default": {"types": "boolean"}
+        "default": {"types": "boolean"},
+        "content": {"type": "array", "items": {"$ref": "#/definitions/content"}}
       }
     },
-    "integrations": {
+    "integration": {
       "$id": "#definitions/integration",
+      "additionalProperties": false,
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
         "disposition": {"$ref": "#/definitions/disposition"}
       }
     },
-    "badge": {
-      "$id": "#definitions/badge",
+    "content": {
+      "$id": "#definitions/content",
+      "additionalProperties": false,
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
-        "disposition": {"$ref": "#/definitions/disposition"}
+        "disposition": {"$ref": "#/definitions/disposition"},
+        "filter": {
+                    "type": "object",
+                    "properties": {
+                      "path": {"type": "string"}
+                    }
+                  },
+        "detection": {"type": "boolean"},
+        "contains": {"type": "string"}
+      }
+    },
+    "owner": {
+      "$id": "#definitions/owner",
+      "additionalProperties": false,
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/language"
+          }
+        },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/repository"
+          }
+        }
       }
     },
     "repository": {
@@ -53,9 +86,7 @@
         "enabled": {"type": "boolean"},
         "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
         "integrations": {"type": "array", "items": {"$ref": "#/definitions/integration"}},
-        "badges": {"type": "array", "items": {"$ref": "#/definitions/badge"}},
-        "public": {"type": "boolean"},
-        "homepage": {"type": "string"}
+        "public": {"type": "boolean"}
       }
     },
     "language": {
@@ -65,10 +96,12 @@
       "properties": {
         "name": {"type": "string"},
         "enabled": {"type": "boolean"},
-        "branches": {"type": "array", "items": {"$ref": "#/definitions/branch"}},
-        "automations": {"type": "array", "items": {"$ref": "#/definitions/automations"}},
-        "public": {"type": "boolean"},
-        "homepage": {"type": "string"}
+        "repositories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/repository"
+          }
+        }
       }
     }
   },
@@ -77,10 +110,10 @@
     "$schema": {"type": "string"},
     "additionalProperties": false,
     "github": {"$ref": "#/definitions/source"},
-    "repositories": {
+    "owners": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/repository"
+        "$ref": "#/definitions/owner"
       }
     }
   }
