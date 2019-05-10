@@ -1,34 +1,31 @@
-import { MasterConfig } from '../config'
 import { Validator } from './validator'
 import { RepositoryValidator } from './repository'
-import { AWS } from '../aws'
 import chalk from 'chalk'
-import Octokit from '@octokit/rest'
-import fs from 'fs-extra'
-import { RepositoryConfig } from '../config/repository'
+import Octokit from '@arietrouw/rest'
+import { GithublintSchemaJson } from '../types/schema'
+import _ from 'lodash'
 
-export class MasterValidator extends Validator<MasterConfig> {
+export class MasterValidator extends Validator<GithublintSchemaJson> {
 
   public repositories: RepositoryValidator[] = []
 
-  constructor(config: MasterConfig) {
-    super(config)
+  constructor(config: GithublintSchemaJson, data?: any) {
+    super(config, data)
   }
 
-  public async validate() {
-    this.addRepositoriesFromConfig()
-    if (this.config.aws && this.config.aws.enabled) {
-      await this.addRepositoriesFromGithub()
+  public async validate(octokit: Octokit) {
+    if (this.config.github && this.config.github.enabled) {
+      await this.addRepositoriesFromGithub(octokit)
     }
 
     let completedRepositories = 0
-    for (const repository of Object.values(this.repositories)) {
+    for (const repository of this.repositories) {
       try {
-        const errors = await repository.validate()
         completedRepositories++
         console.log(
-          `Domain:[${completedRepositories}/${this.repositories.length}]: ${repository.name}`)
-        this.errorCount += errors
+          `Repo:[${completedRepositories}/${this.repositories.length}]: \
+          ${repository.owner}/${repository.name}[${repository.language}]`)
+        this.errorCount += await repository.validate(octokit)
       } catch (ex) {
         this.addError("MasterValidator.validate", `Unexpected Error: ${ex.message}`)
         console.error(chalk.red(ex.message))
@@ -37,26 +34,44 @@ export class MasterValidator extends Validator<MasterConfig> {
       }
     }
 
-    return super.validate()
+    return super.validate(octokit)
   }
 
-  private addRepositoriesFromConfig() {
-    if (this.config.repositories) {
-      for (const repository of this.config.repositories.values()) {
-        if (repository.name !== "default") {
-          console.log(chalk.yellow(`Adding Domain from Config: ${repository.name}`))
-          const repositoryConfig = this.config.getRepositoryConfig(repository.name)
-          this.repositories.push(new RepositoryValidator(repositoryConfig))
+  private getOwnerConfig(name: string) {
+    if (this.config.owners) {
+      for (const owner of this.config.owners) {
+        if (owner.name === name) {
+          return owner
         }
       }
     }
   }
 
-  private async addRepositoriesFromGithub() {
-    try {
-      const auth = (await fs.readFile('accesstoken.txt')).toString()
-      const octokit = new Octokit({ auth })
+  private getRepoConfig(owner: any, name: string) {
+    if (owner.repositories) {
+      for (const repository of owner.repositories) {
+        if (repository.name === name) {
+          return repository
+        }
+      }
+    }
+  }
 
+  private getMergedOwnerConfig(ownerName: string) {
+    const defaultOwner = this.getOwnerConfig("*")
+    const owner = this.getOwnerConfig(ownerName)
+    return _.merge({}, defaultOwner, owner)
+  }
+
+  private getMergedRepositoryConfig(ownerName: string, repoName: string) {
+    const owner = this.getMergedOwnerConfig(ownerName)
+    const defaultRepo = this.getRepoConfig(owner, "*")
+    const repo = this.getRepoConfig(owner, repoName)
+    return _.merge({}, defaultRepo, repo)
+  }
+
+  private async addRepositoriesFromGithub(octokit: Octokit) {
+    try {
       let page = 1
       while (page > 0) {
         const repos = await octokit.repos.list(
@@ -75,8 +90,14 @@ export class MasterValidator extends Validator<MasterConfig> {
         }
 
         for (const repo of repos.data) {
-          console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
-          this.repositories.push(new RepositoryValidator(new RepositoryConfig(repo.full_name), repo))
+          if (repo.archived) {
+            console.log(chalk.gray(`Skipping Archived Repo: ${repo.full_name}`))
+          } else {
+            console.log(chalk.gray(`Found Repo: ${repo.full_name}`))
+            this.repositories.push(
+              new RepositoryValidator(
+                this.getMergedRepositoryConfig(repo.owner.login, repo.name), repo.owner.login, repo.name, repo))
+          }
         }
       }
     } catch (ex) {
