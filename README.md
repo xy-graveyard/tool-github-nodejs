@@ -12,7 +12,7 @@
 
 ## License
 
-Only for internal XY Company use at this time
+GNU Lesser General Public License v3.0	
 
 ## Credits
 
