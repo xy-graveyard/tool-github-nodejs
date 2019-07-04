@@ -11,7 +11,9 @@
     "build": "yarn schema && yarn lint && yarn tsc",
     "schema": "yarn json2ts -i ./src/schema/githublint.schema.json -o ./src/types/schema.d.ts --no-style.semi",
     "cli": "yarn build && node dist/cli.js",
-    "develop": "yarn build && ts-node --files src/cli.ts"
+    "develop": "yarn build && ts-node --files src/cli.ts",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "bin": {
     "githublint": "bin/githublint"
@@ -40,7 +42,8 @@
     "dotenv-expand": "^5.1.0",
     "fs-extra": "^7.0.1",
     "load-json-file": "^6.0.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
@@ -55,5 +58,6 @@
     "tslint-config-airbnb": "^5.11.1",
     "typescript": "^3.4.5",
     "yarn": "^1.15.2"
-  }
+  },
+  "snyk": true
 }
