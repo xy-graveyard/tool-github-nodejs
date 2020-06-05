@@ -15,13 +15,7 @@ jobs:
     - uses: actions/setup-node@v1
       with: 
         node-version: 10.15.0
-    - uses: sonarsource/sonarcloud-github-action@master
-      env: 
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_2}}
     - name: Install
       run: yarn install
     - name: Build
       run: yarn build
-    - name: Test
-      run: yarn test
