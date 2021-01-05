@@ -34,7 +34,7 @@
     "@arietrouw/rest": "^16.25.2",
     "assert": "^1.4.1",
     "aws-sdk": "^2.450.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "chalk": "^2.4.2",
     "commander": "^2.19.0",
     "dotenv-expand": "^5.1.0",
